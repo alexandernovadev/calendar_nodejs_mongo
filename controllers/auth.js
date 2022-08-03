@@ -51,7 +51,7 @@ const login = async (req, res) => {
     if (!user) {
       return res.status(400).json({
         ok: false,
-        msg: "The user no exist",
+        message: "The user no exist",
       });
     }
 
@@ -61,7 +61,7 @@ const login = async (req, res) => {
     if (!validPassword) {
       return res.status(400).json({
         ok: false,
-        msg: "Incorrect password ",
+        message: "Incorrect password",
       });
     }
 
@@ -70,6 +70,7 @@ const login = async (req, res) => {
 
     res.json({
       ok: true,
+      message: "Login Successfully",
       uid: user.id,
       name: user.name,
       token,
@@ -78,14 +79,22 @@ const login = async (req, res) => {
     console.log(error);
     res.status(500).json({
       ok: false,
-      msg: "Error Login tell to devs",
+      message: "Error Login tell to devs",
     });
   }
 };
 
-const renewToken = (req, res) => {
+const renewToken = async (req, res) => {
+  const { uid, name } = req;
+
+  // Generate JWT
+  const token = await generateJWT(uid, name);
+
   res.json({
-    msg: "renewtoken",
+    ok: true,
+    uid,
+    name,
+    token,
   });
 };
 
